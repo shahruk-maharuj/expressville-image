@@ -1,0 +1,39 @@
+# Initialize a new Node.js project:
+mkdir ExpressVille
+cd ExpressVille
+npm init -y
+
+# Install Express:
+npm i express
+
+# Create the Express server:
+created file: app.js
+
+# Create a Dockerfile:
+created file: docker -> dev -> Dockerfile
+
+# Build the Docker image:
+docker build -t expressville-image:dev -f docker/dev/Dockerfile .
+
+# Run the container interactively: 
+docker run --rm -it -v $(pwd):/usr/src/app -v /usr/src/app/node_modules --env-file $(pwd)/.env -p 3000:3000 -e NODE_ENV=development expressville-image:dev
+
+# Run the container in detached mode:
+docker run -d --rm -v $(pwd):/usr/src/app -v /usr/src/app/node_modules --env-file $(pwd)/.env -p 3001:3000 -e NODE_ENV=development expressville-image:dev
+
+# Modify the Express application:
+
+app.get('/', (req, res) => {
+    const welcomeMessage = process.env.WELCOME_MESSAGE || "Welcome to ExpressVille!";
+    res.send(welcomeMessage);
+});
+
+# Rebuild the Docker image:
+docker build -t expressville-image:dev -f docker/dev/Dockerfile .
+
+# Run a new container with environment variable:
+docker run -d --rm -v $(pwd):/usr/src/app -v /usr/src/app/node_modules --env-file $(pwd)/.env -p 3001:3000 -e NODE_ENV=development -e WELCOME_MESSAGE="Hello from the Docker Container!" expressville-image:dev
+
+# Commands to run three separate containers:
+docker run -d --rm -v $(pwd):/usr/src/app -v /usr/src/app/node_modules --env-file $(pwd)/.env -p 3003:3000 -e NODE_ENV=development expressville-image:dev
+docker run -d --rm -v $(pwd):/usr/src/app -v /usr/src/app/node_modules --env-file $(pwd)/.env -p 3004:3000 -e NODE_ENV=development expressville-image:dev
