@@ -37,3 +37,14 @@ docker run -d --rm -v $(pwd):/usr/src/app -v /usr/src/app/node_modules --env-fil
 # Commands to run three separate containers:
 docker run -d --rm -v $(pwd):/usr/src/app -v /usr/src/app/node_modules --env-file $(pwd)/.env -p 3003:3000 -e NODE_ENV=development expressville-image:dev
 docker run -d --rm -v $(pwd):/usr/src/app -v /usr/src/app/node_modules --env-file $(pwd)/.env -p 3004:3000 -e NODE_ENV=development expressville-image:dev
+
+# Load Balancing with Nginx:
+created file: 
+    docker->nginx.conf
+    docker->Dockerfile.nginx
+
+# Build the Nginx Docker Image:
+docker build -t expressville-nginx:dev -f docker/dev/Dockerfile.nginx .
+
+# Run the Nginx Container:
+docker run -d --rm -v $(pwd):/usr/src/app -v /usr/src/app/node_modules --env-file $(pwd)/.env -p 80:80 -e NODE_ENV=development expressville-image:dev
